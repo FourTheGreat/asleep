@@ -4,13 +4,12 @@ require "asleep.Class"
 
 Color = Class.new('Color')
 
-Color.setField('r', 0,'default', function(I,k,c,v)I.rawset('r',v)I.updateValues('rgba')end)
-Color.setField('g', 0,'default', function(I,k,c,v)I.rawset('g',v)I.updateValues('rgba')end)
-Color.setField('b', 0,'default', function(I,k,c,v)I.rawset('b',v)I.updateValues('rgba')end)
-Color.setField('a', 0,'default', function(I,k,c,v)I.rawset('a',v)I.updateValues('rgba')end)
-Color.setField('hexCode', 0,'default', function(I,k,c,v)I.rawset('hexCode',v)I.updateValues('hexCode')end)
-Color.setField('intValue', 0,'default', function(I,k,c,v)I.rawset('intValue',v)I.updateValues('intValue')end)
-Color.setField('parent', nil, 'default', 'default')
+Color.setField('r', 0,'default', function(I,k,v,c)I.rawset('r',v)I.updateValues('rgba')end)
+Color.setField('g', 0,'default', function(I,k,v,c)I.rawset('g',v)I.updateValues('rgba')end)
+Color.setField('b', 0,'default', function(I,k,v,c)I.rawset('b',v)I.updateValues('rgba')end)
+Color.setField('a', 0,'default', function(I,k,v,c)I.rawset('a',v)I.updateValues('rgba')end)
+Color.setField('hexCode', 0,'default', function(I,k,v,c)I.rawset('hexCode',v)I.updateValues('hexCode')end)
+Color.setField('intValue', 0,'default', function(I,k,v,c)I.rawset('intValue',v)I.updateValues('intValue')end) 
 
 Color.setField('updateValues', function(I, from)
  from = from:gsub('%s+', ''):lower()
@@ -28,10 +27,6 @@ Color.setField('updateValues', function(I, from)
  I.rawset('a',tbl[4])
  I.rawset('hexCode',tbl[5])
  I.rawset('intValue',tbl[6])
- if I.rawget('parent') then
-  debugPrint('hasParent')
-  I.rawget('parent').vars['color'][3](I.rawget('parent'), 'color', Color.white, I)
- end
 end)
 
 Color.makeTable = function(c, origin)
