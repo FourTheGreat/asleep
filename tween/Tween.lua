@@ -15,11 +15,12 @@ Tween.onUpdate = function(I,e)
  for k, v in pairs(I.rawget('vars')) do
   local o = I.rawget('obj')
   local s = I.rawget('varStarts')
-  local f = EaseFuncs[I.rawget('ease')] or EaseFuncs.linear
+  local f = EaseFuncs[I.rawget('easeFunc')] or EaseFuncs.linear
   if I.rawget('objMode') then
-   o[k]=f(v,s[k],I.rawget(curTime)/I.rawget('maxTime'))
+   o[k]=s[k]+(f(v,s[k],I.rawget('curTime')/I.rawget('maxTime')))
+   --debugPrint(k..': '..v..' '..s[k])
   else
-   setProperty(o..'.'..k,f(v,s[k],I.rawget('curTime')/I.rawget('maxTime')))
+   setProperty(o..'.'..k,s[k]+f(v,s[k],I.rawget('curTime')/I.rawget('maxTime')))
   end
  end
 end
@@ -31,9 +32,14 @@ Tween.new = function(obj, vars, time, ease, onComplete)
   I.rawset('objMode',true)
  end
  I.rawset('vars',vars)
- I.rawset('ease', ease or 'linear')
+ if vars.is then
+  if vars.type == 'Color' then
+   I.rawset('vars', {r=vars.r,g=vars.g,b=vars.b,a=vars.a})
+  end
+ end
+ I.rawset('easeFunc', ease or 'linear')
  local starters = {}
- for k, v in pairs(vars) do
+ for k, v in pairs(I.rawget('vars')) do
   if I.rawget('objMode') then
    starters[k] = obj.rawget(k)
   else
