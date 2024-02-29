@@ -21,7 +21,6 @@ Bar.setField('percent', 50, 'default', function(I,k,v,c)
 end)
 
 Bar.setField('reloadBar',function(I)
- local tween = Tween.
 end)
 
 Bar.setField('tweening', false)
