@@ -6,7 +6,7 @@ require'asleep.Color'
 Sprite = Basic.extend('Sprite')
 local SpriteCounter = 0
 
-Sprite.set = function(I,k,c,v)
+Sprite.set = function(I,k,v,c)
 	I.set(k,v)
 	I.rawset(k,v)
 end
@@ -20,13 +20,13 @@ Sprite.setField('y',0, Sprite.get, Sprite.set)
 Sprite.setField('alpha',1, Sprite.get, Sprite.set)
 Sprite.setField('visible',true, Sprite.get, Sprite.set)
 Sprite.setField('angle',0, Sprite.get, Sprite.set)
-Sprite.setField('camera','camGame',function(I,K,V)
+Sprite.setField('camera','camGame',function(I,k,v)
 	return I.rawget('camera')
-end, function(I,K,C,V)
-	setObjectCamera(I.tag, V)
-	I.rawset('camera',V)
+end, function(I,k,v,c)
+	setObjectCamera(I.tag, v)
+	I.rawset('camera',v)
 end)
-Sprite.setField('color', Color.white, 'default', function(I,k,c,v)
+Sprite.setField('color', Color.white, 'default', function(I,k,v,c)
 	local t = ''
 	if type(v) == 'string' then
 		t = 'fromHex'
@@ -85,8 +85,8 @@ Sprite.setField('set', function(I,K,V)
 	setProperty(I.rawget('tag')..'.'..K,V)
 end)
 
-
 Sprite.onUpdate = function(I)
+	I.set('color', I.color.intValue)
 end
 Sprite.setField('_update', Sprite.onUpdate)
 
