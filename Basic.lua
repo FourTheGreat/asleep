@@ -1,5 +1,6 @@
 luaDebugMode = true
 package.path = package.path..debug.getinfo(1,'S').source:sub(2):match('(.+scripts/)')..'?.lua;'
+require'asleep.Event'
 require'asleep.Class'
 Basic = Class.new('Basic')
 
@@ -8,6 +9,7 @@ Basic.setField('update', function()end)
 Basic.setField('doUpdate', true)
 Basic.update = function(e)end
 
+Event.set('onUpdate')
 function onUpdate(e)
 	for _, I in pairs(Basic.instances) do
 		I._update(e)
