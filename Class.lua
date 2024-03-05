@@ -4,6 +4,7 @@ Class.new = function(name)
 	local self = {}
 	self.instances = {}
 	self.instanceVars = {}
+	self.forceIndex = false
 	self.setField = function(field, defVal, get, set)
 		self.instanceVars[field] = {defVal, get or 'default', set or 'default'}
 	end
@@ -61,6 +62,10 @@ Class.new = function(name)
 						return field[2](I,k,I.vars[k][1])
 					elseif field[2] == 'default' then
 						return self.defaultGet(I,k,I.vars[k][1])
+					end
+				else
+					if self.forceIndex then
+						return self.defaultGet(I,k,nil)
 					end
 				end
 			end,
