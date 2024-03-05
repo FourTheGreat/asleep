@@ -1,7 +1,7 @@
 luaDebugMode = true
-package.path = package.path..debug.getinfo(1,'S').source:sub(2):match('(.+scripts/)')..'?.lua;'
-require'asleep.Basic'
-require'asleep.Color'
+package.path = package.path..debug.getinfo(1,'S').source:sub(2):match('(.+asleep.)')..'?.lua;'
+require'Basic'
+require'Color'
 
 Sprite = Basic.extend('Sprite')
 local SpriteCounter = 0
@@ -11,8 +11,9 @@ Sprite.set = function(I,k,v,c)
 	I.rawset(k,v)
 end
 Sprite.get = function(I,k,v)
-	return I.get(k)
+	return getProperty(I.rawget('tag')..'.'..k)
 end
+Sprite.defaultGet = Sprite.get
 
 Sprite.setField('tag','')
 Sprite.setField('x',0, Sprite.get, Sprite.set)
@@ -23,10 +24,10 @@ Sprite.setField('angle',0, Sprite.get, Sprite.set)
 Sprite.setField('camera','camGame',function(I,k,v)
 	return I.rawget('camera')
 end, function(I,k,v,c)
-	setObjectCamera(I.tag, v)
+	setObjectCamera(I.rawget('tag'), v)
 	I.rawset('camera',v)
 end)
-Sprite.setField('color', Color.white, 'default', function(I,k,v,c)
+Sprite.setField('color', nil, 'default', function(I,k,v,c)
 	local t = ''
 	if type(v) == 'string' then
 		t = 'fromHex'
@@ -52,49 +53,43 @@ end)
 
 Sprite.setField('makeGraphic',function(I,w,h,c)
  local col = Color.white
-	makeGraphic(I.tag, w,h,col.intValue)
+	makeGraphic(I.rawget('tag'), w,h,col.intValue)
  I.color = (c or Color.white)
 	I.update()
 end)
 Sprite.setField('loadGraphic',function(I,img, w, h)
-	loadGraphic(I.tag, img, w, h)
+	loadGraphic(I.rawget('tag'), img, w, h)
 	I.update()
 end)
 
 Sprite.setField('add', function(I,f)
-	addLuaSprite(I.tag, f)
+	addLuaSprite(I.rawget('tag'), f)
 	I.doUpdate = true
 end)
 Sprite.setField('remove', function(I)
-	removeLuaSprite(I.tag, false)
+	removeLuaSprite(I.rawget('tag'), false)
 	I.doUpdate = false
 end)
 Sprite.setField('destroy', function(I)
-	removeLuaSprite(I.tag)
+	removeLuaSprite(I.rawget('tag'))
 	I = nil
 end)
 
-Sprite.setField('get', function(I,K)
-	if getProperty(tostring(I.rawget('tag'))..'.'..tostring(K)) then
-		return getProperty(I.rawget('tag')..'.'..K)
-	else
-		return I.rawget(K)
-	end
-end)
+Sprite.setField('get', Sprite.get)
 Sprite.setField('set', function(I,K,V)
 	setProperty(I.rawget('tag')..'.'..K,V)
 end)
 
 Sprite.onUpdate = function(I)
-	I.set('color', I.color.intValue)
+	I.set('color', I.rawget('color').intValue)
 end
 Sprite.setField('_update', Sprite.onUpdate)
 
 Sprite.new = function(image)
 	local I = Sprite.createInstance()
 	SpriteCounter = SpriteCounter+1
-	I.color.rawset('parent',I)
+	I.rawset('color', Color.white)
 	I.rawset('tag', 'ASprite'..SpriteCounter)
-	makeLuaSprite(I.tag,image)
+	makeLuaSprite(I.rawget('tag'),image)
 	return I
 end
