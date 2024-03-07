@@ -21,36 +21,69 @@ FancyText.setField('text', '', 'default', function(I,k,v,c)
    end
   end
  end
- I.rawget('letters').foreach(function(l,i)
-  l.setLetter(v:sub(i,i))
-  debugPrint(v:sub(i,i))
- end)
  I.rawset('text',v)
+ I.reloadText()
 end)
-FancyText.setField('x', 0, 'default', function(I,k,v,c)
- I.rawget('letters').members[1].x = v
+FancyText.setField('color', Color.white, 'default', function(I,k,v,c)
+ local t = ''
+	if type(v) == 'string' then
+		t = 'fromHex'
+		I.rawget('color').hexCode = v
+	elseif type(v) == 'table' then
+		if v.is then
+			if v.rawget('type') == 'Color' then
+				I.rawset('color', nil)
+				I.rawset('color', v)
+			end
+		else
+   local c = I.rawget('color')
+			c.r = v[1] or 0
+			c.g = v[2] or 0
+			c.b = v[3] or 0
+			c.a = v[4] or 255
+		end
+	elseif type(v) == 'number' then
+		I.rawget('color').intValue = v
+	end
+	I.reloadText()
+end)
+FancyText.setField('reloadText', function(I)
+ I.rawget('letters').members[1].x = I.x
  I.rawget('letters').foreach(function(l,i)
+  l.setLetter(I.text:sub(i,i))
+  l.color = I.color
   if i>1 then
    l.x = I.rawget('letters').members[i-1].x + I.rawget('letters').members[i-1].width
   end
+  l.y = I.y
+  if I.alive then
+   l.add()
+  else
+   l.remove()
+  end
  end)
+end)
+FancyText.setField('x', 0, 'default', function(I,k,v,c)
+ I.rawset('x',v)
+ I.reloadText()
+end)
+FancyText.setField('y', 0, 'default', function(I,k,v,c)
+ I.rawset('y',v)
+ I.reloadText()
 end)
 FancyText.setField('camera', 'camGame', 'default', function(I,k,v,c)
  I.rawget('letters').foreach(function(l,i)
   l.camera = v
  end)
+ I.reloadText()
 end)
 FancyText.setField('add', function(I)
  I.rawset('alive', true)
- I.rawget('letters').foreach(function(l,i)
-  l.add()
- end)
+ I.reloadText()
 end)
 FancyText.setField('remove', function(I)
  I.rawset('alive', false)
- I.rawget('letters').foreach(function(l,i)
-  l.remove()
- end)
+ I.reloadText()
 end)
 FancyText.new = function()
  local I = FancyText.createInstance()
