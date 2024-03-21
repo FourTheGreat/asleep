@@ -146,11 +146,14 @@ setmetatable(Color, {
   if k=='brown'then return Color.new('FF884400')end
   if k=='lime'then return Color.new('FF44FF44')end
 
-  if k == 'player' or k == 'bf' or k == 'boyfriend' then
+  if k == 'player' or k == 'bf' or k == 'boyfriend' or k == 'player1' or k == 'p1' then
    return Color.new(getProperty('boyfriend.healthColorArray'))
   end
-  if k == 'dad' or k == 'opp' or k == 'opponent' then
+  if k == 'dad' or k == 'opp' or k == 'opponent' or k == 'player2' or k == 'p2' then
    return Color.new(getProperty('dad.healthColorArray'))
+  end
+  if k == 'gf' or k == 'girlfriend' or k == 'player3' or k == 'p3' then
+   return Color.new(getProperty('gf.healthColorArray'))
   end
 
   if k=='random'then return Color.new({getRandomInt(0,255),getRandomInt(0,255),getRandomInt(0,255)})end
