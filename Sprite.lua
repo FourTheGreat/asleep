@@ -18,6 +18,7 @@ Sprite.get = function(I,k,v)
 	end
 	return I.get(k)
 end
+Sprite.forceIndex = true
 Sprite.defaultGet = Sprite.get
 
 Sprite.setField('tag','')
