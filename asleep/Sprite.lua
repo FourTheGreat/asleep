@@ -11,12 +11,7 @@ Sprite.set = function(I,k,v,c)
 	I.rawset(k,v)
 end
 Sprite.get = function(I,k,v)
-	debugPrint(k)
-	local g = getProperty(I.rawget('tag')..'.'..k)
-	if g == I.rawget('tag')..'.'..k then
-		return I.rawget(k)
-	end
-	return I.get(k)
+	return getProperty(I.rawget('tag')..'.'..k)
 end
 Sprite.defaultGet = Sprite.get
 
@@ -61,56 +56,40 @@ Sprite.setField('makeGraphic',function(I,w,h,c)
 	makeGraphic(I.rawget('tag'), w,h,col.intValue)
  I.color = (c or Color.white)
 	I.update()
-	return I
 end)
 Sprite.setField('loadGraphic',function(I,img, w, h)
 	loadGraphic(I.rawget('tag'), img, w, h)
-	I.color = Color.white
 	I.update()
-	return I
 end)
 
 Sprite.setField('add', function(I,f)
 	addLuaSprite(I.rawget('tag'), f)
 	I.doUpdate = true
-	I.update()
-	return I
 end)
 Sprite.setField('remove', function(I)
 	removeLuaSprite(I.rawget('tag'), false)
 	I.doUpdate = false
-	return I
 end)
 Sprite.setField('destroy', function(I)
 	removeLuaSprite(I.rawget('tag'))
 	I = nil
 end)
 
-Sprite.setField('get', function(I,k,v)
-	return getProperty(I.rawget('tag')..'.'..k)
-end)
-Sprite.setField('set', function(I,k,v)
-	setProperty(I.rawget('tag')..'.'..k,v)
-	return I
-end)
-Sprite.setField('rset', function(I,k,v)
-	I[k] = v
-	return I
+Sprite.setField('get', Sprite.get)
+Sprite.setField('set', function(I,K,V)
+	setProperty(I.rawget('tag')..'.'..K,V)
 end)
 
 Sprite.onUpdate = function(I)
 	I.set('color', I.rawget('color').intValue)
-	return I
 end
 Sprite.setField('_update', Sprite.onUpdate)
 
-Sprite.new = function(x,y,image)
+Sprite.new = function(image)
 	local I = Sprite.createInstance()
 	SpriteCounter = SpriteCounter+1
 	I.rawset('color', Color.white)
 	I.rawset('tag', 'ASprite'..SpriteCounter)
 	makeLuaSprite(I.rawget('tag'),image)
-	I.x = x or 0
-	I.y = y or 0
 	return I
 end

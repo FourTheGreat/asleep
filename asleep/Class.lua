@@ -1,15 +1,4 @@
 luaDebugMode = true
-local function copyTable(tbl)
- local r = {}
- for k, v in pairs(tbl) do
-  if type(v) == 'table' then
-   r[k] = copyTable(v)
-  else
-   r[k] = v
-  end
- end
- return r
-end
 Class = {}
 Class.new = function(name)
 	local self = {}
@@ -29,7 +18,7 @@ Class.new = function(name)
 	self.setField('is', function(I, class)
 		return ((I.type == class.type) or (class.type == 'Any') or (class.type == class))
 	end)
- self.indexOf = function(instance)
+ self.getIndexOf = function(instance)
   for k,v in pairs(self.instances) do
    if v == instance then
     return k
@@ -50,13 +39,9 @@ Class.new = function(name)
 		for k,v in pairs(self.instanceVars) do
 			local val, get, set = v[1], v[2], v[3]
 			if type(val) == 'function' then
-				I[k] = function(...)return val(I,...)end
+				I[k] = function(...)val(I,...)end
 			else
-				if type(val) == 'table' then
-					I.vars[k] = {copyTable(val), get, set}
-				else
-					I.vars[k] = {val, get, set}
-				end
+				I.vars[k] = {val, get, set}
 			end
 		end
 		I.rawset = function(k,v)
@@ -110,4 +95,3 @@ Class.new = function(name)
 
 	return self
 end
-

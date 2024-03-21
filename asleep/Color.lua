@@ -9,7 +9,6 @@ Color.setField('g', 0,'default', function(I,k,v,c)I.rawset('g',v)I.updateValues(
 Color.setField('b', 0,'default', function(I,k,v,c)I.rawset('b',v)I.updateValues('rgba')end)
 Color.setField('a', 0,'default', function(I,k,v,c)I.rawset('a',v)I.updateValues('rgba')end)
 Color.setField('hexCode', 0,'default', function(I,k,v,c)I.rawset('hexCode',v)I.updateValues('hexCode')end)
-Color.setField('subCode', 0,'default', function(I,k,v,c)I.rawset('hexCode',v)I.updateValues('hexCode')end) 
 Color.setField('intValue', 0,'default', function(I,k,v,c)I.rawset('intValue',v)I.updateValues('intValue')end) 
 
 Color.setField('updateValues', function(I, from)
@@ -27,7 +26,6 @@ Color.setField('updateValues', function(I, from)
  I.rawset('b',tbl[3])
  I.rawset('a',tbl[4])
  I.rawset('hexCode',tbl[5])
- I.rawset('subCode',tbl[5]:sub(-6))
  I.rawset('intValue',tbl[6])
 end)
 
@@ -42,11 +40,11 @@ Color.makeTable = function(c, origin)
     h = h..'0'
    end
   end
-  local intCol = bit.tobit(tonumber(h or 'FFFFFF',16))
-  local a = bit.band(bit.rshift(intColor or -1,24), 0xFF)
-  local r = bit.band(bit.rshift(intColor or -1,16),0xFF)
-  local g = bit.band(bit.rshift(intColor or -1,8),0xFF)
-  local b = bit.band(intColor or -1,0xFF)
+  local intCol = bit.tobit(tonumber(h,16))
+  local a = bit.band(bit.rshift(intCol,24), 0xFF)
+  local r = bit.band(bit.rshift(intCol,16),0xFF)
+  local g = bit.band(bit.rshift(intCol,8),0xFF)
+  local b = bit.band(intCol,0xFF)
   tbl[1]=r
   tbl[2]=g
   tbl[3]=b
@@ -127,33 +125,23 @@ end
 setmetatable(Color, {
  __index = function(t,k)
   k = k:lower()
-  if k=='white'then return Color.new('FFFFFFFF')end
-  if k=='lightgray'then return Color.new('FFDDDDDD')end
-  if k=='gray'then return Color.new('FF888888')end
-  if k=='darkgray'then return Color.new('FF444444')end
-  if k=='black'then return Color.new('FF000000')end
+  if k == 'white' then return Color.new('FFFFFFFF')end
+  if k == 'lightgray' then return Color.new('FFDDDDDD')end
+  if k == 'gray' then return Color.new('FF888888')end
+  if k == 'darkgray' then return Color.new('FF444444')end
+  if k == 'black' then return Color.new('FF000000')end
 
-  if k=='red'then return Color.new('FFFF0000')end
-  if k=='orange'then return Color.new('FFF88F00')end
-  if k=='yellow'then return Color.new('FFFFFF00')end
-  if k=='green'then return Color.new('FF00FF00')end
-  if k=='cyan'then return Color.new('FF00FFFF')end
-  if k=='blue'then return Color.new('FF0000FF')end
-  if k=='purple'then return Color.new('FF8800FF')end
-  if k=='magenta'then return Color.new('FFFF00FF')end
+  if k == 'red' then return Color.new('FFFF0000')end
+  if k == 'orange' then return Color.new('FFF88F00')end
+  if k == 'yellow' then return Color.new('FFFFFF00')end
+  if k == 'green' then return Color.new('FF00FF00')end
+  if k == 'cyan' then return Color.new('FF00FFFF')end
+  if k == 'blue' then return Color.new('FF0000FF')end
+  if k == 'purple' then return Color.new('FF8800FF')end
+  if k == 'magenta' then return Color.new('FFFF00FF')end
 
-  if k=='pink'then return Color.new('FFFF88ff')end
-  if k=='brown'then return Color.new('FF884400')end
-  if k=='lime'then return Color.new('FF44FF44')end
-
-  if k == 'player' or k == 'bf' or k == 'boyfriend' then
-   return Color.new(getProperty('boyfriend.healthColorArray'))
-  end
-  if k == 'dad' or k == 'opp' or k == 'opponent' then
-   return Color.new(getProperty('dad.healthColorArray'))
-  end
-
-  if k=='random'then return Color.new({getRandomInt(0,255),getRandomInt(0,255),getRandomInt(0,255)})end
-  return nil
+  if k == 'pink' then return Color.new('FFFF88ff')end
+  if k == 'brown' then return Color.new('FF884400')end
+  if k == 'lime' then return Color.new('FF44FF44')end
  end
 })

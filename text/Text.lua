@@ -10,6 +10,10 @@ Text.set = function(I,k,v,c)
 	I.rawset(k,v)
 end
 Text.get = function(I,k,v)
+	local g = getProperty(I.rawget('tag')..'.'..k)
+	if g == I.rawget('tag')..'.'..k then
+		return I.rawget(k)
+	end
 	return getProperty(I.rawget('tag')..'.'..k)
 end
 Text.defaultGet = Text.get
@@ -17,7 +21,6 @@ Text.defaultGet = Text.get
 Text.setField('text', '', Text.get, Text.set)
 Text.setField('alignment', 'left', 'default', function(I,k,v,c)setTextAlignment(I.rawget('tag'),v)end)
 Text.setField('size', 16, 'default', function(I,k,v,c)setTextSize(I.rawget('tag'),v)end)
-
 
 Text.setField('tag','')
 Text.setField('x',0, Text.get, Text.set)
@@ -58,10 +61,12 @@ end)
 Text.setField('add', function(I,f)
 	addLuaText(I.rawget('tag'), f)
 	I.doUpdate = true
+	return I
 end)
 Text.setField('remove', function(I)
 	removeLuaText(I.rawget('tag'), false)
 	I.doUpdate = false
+	return I
 end)
 Text.setField('destroy', function(I)
 	removeLuaText(I.rawget('tag'))
