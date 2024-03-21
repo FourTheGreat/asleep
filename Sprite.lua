@@ -73,6 +73,7 @@ end)
 
 Sprite.setField('screenCenter', function(I,axis)
 	screenCenter(I.rawget('tag'), axis)
+	return I
 end)
 
 Sprite.setField('add', function(I,f)
