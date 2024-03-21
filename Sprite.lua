@@ -71,6 +71,10 @@ Sprite.setField('loadGraphic',function(I,img, w, h)
 	return I
 end)
 
+Sprite.setField('screenCenter', function(I,axis)
+	screenCenter(I.rawget('tag'), axis)
+end)
+
 Sprite.setField('add', function(I,f)
 	addLuaSprite(I.rawget('tag'), f)
 	I.doUpdate = true
@@ -94,9 +98,12 @@ Sprite.setField('set', function(I,k,v)
 	setProperty(I.rawget('tag')..'.'..k,v)
 	return I
 end)
-Sprite.setField('rset', function(I,k,v)
+Sprite.setField('bakedset', function(I,k,v)
 	I[k] = v
 	return I
+end)
+Sprite.setField('bakedget', function(I,k,v)
+	return I[k]
 end)
 
 Sprite.onUpdate = function(I)
