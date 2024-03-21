@@ -37,6 +37,9 @@ Class.new = function(name)
   end
  end
  self.setField('destroy', function(I)
+		if i == nil then
+			error('Nil value!',2)
+		end
   local id = self.getIndexOf(I)
   table.remove(self.instances,id)
   I = nil

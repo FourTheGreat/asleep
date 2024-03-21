@@ -23,7 +23,7 @@ Timer.setField('resume', function(I)
 end)
 
 Timer.onUpdate = function(I,e)
-	if I.rawget('running') then I.rawset('curTime', I.rawget('curTime')+e) end
+	if I.rawget('running') then I.rawset('curTime', I.rawget('curTime')+(e*getProperty('playbackRate'))) end
 	if I.rawget('curTime') >= I.maxTime and I.rawget('running') then
 		if I.rawget('loops') == -1 then
 			I.run()

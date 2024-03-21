@@ -3,6 +3,8 @@ package.path = package.path..debug.getinfo(1,'S').source:sub(2):match('(.+script
 require'asleep.Basic'
 require'asleep.Sprite'
 require'asleep.Color'
+require'asleep.tween.Tween'
+
 Bar = Basic.extend('Bar')
 Bar.setField('front', nil, 'default', 'never')
 Bar.setField('back', nil, 'default', 'never')
@@ -62,18 +64,41 @@ Bar.setField('remove', function(I)
  I.front.remove()
 end)
 
-Bar.setField('min', 0)
-Bar.setField('max', 1)
-Bar.setField('cur', 0.5)
+Bar.setField('min', 0, 'default', function(I,k,v,c)
+ I.rawset('percent', (I.cur - v) / I.max)
+ I.rawset('min', v)
+ I.reloadBar()
+end)
+Bar.setField('max', 1, 'default', function(I,k,v,c)
+ I.rawset('percent', (I.cur - I.min) / v)
+ I.rawset('max', v)
+ I.reloadBar()
+end)
+Bar.setField('cur', 0.5, 'default', function(I,k,v,c)
+ I.rawset('percent', (v - I.min) / I.max)
+ I.rawset('cur', v)
+ I.reloadBar()
+end)
 
 Bar.setField('overlay', false)
 Bar.setField('leftToRight', true)
 
+Bar.setField('percent', 50, 'default', function(I,k,v,c)
+ I.rawset('cur', (I.max - I.min) * (v/100))
+ I.reloadBar()
+end)
+Bar.setField('visiblePercent', 50)
+
+Bar.setField('barTween', nil)
+
+Bar.setField('tween', true)
+
 Bar.setField('reloadBar', function(I)
+ I.rawset('barTween', Tween.reuse(I.barTween, I, {visiblePercent=(((I.cur-I.min)/I.max)*100)},0.25,'quadOut'))
  if I.leftToRight then
-  I.front.set('_frame.frame.width', I.back.get('width') * (I.cur/I.max))
+  I.front.set('_frame.frame.width', I.back.get('width') * (I.visiblePercent/100))
  else
-  I.front.set('_frame.frame.width', I.back.get('width') - (I.back.get('width') * (I.cur/I.max)))
+  I.front.set('_frame.frame.width', I.back.get('width') - (I.back.get('width') * (I.visiblePercent/100)))
  end
  if I.overlay then
   setObjectOrder(I.border.rawget'tag', getObjectOrder(I.front.rawget'tag')+1)
@@ -101,6 +126,9 @@ Bar.new = function()
  I.rawset('border', Sprite.new())
  I.rawset('front', Sprite.new())
  I.rawset('back', Sprite.new())
+
+ I.rawset('barTween', Tween.new(I,{visiblePercent=50},0.25,'quadOut'))
+
  I.border.makeGraphic(500,40, Color.black)
  I.front.makeGraphic(500,40, Color.green)
  I.back.makeGraphic(500,40, Color.red)
