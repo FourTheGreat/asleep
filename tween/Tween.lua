@@ -20,7 +20,6 @@ Tween.onUpdate = function(I,e)
    o[k]=s[k]+(f(v,
    s[k],
    I.rawget('curTime')/I.rawget('maxTime')))
-   --debugPrint(k..': '..v..' '..s[k])
   else
    setProperty(o..'.'..k,s[k]+f(v,
    s[k],
@@ -34,11 +33,11 @@ Tween.reuse = function(tween, obj, vars, time, ease, onComplete)
  I.curTime = 0
  I.maxTime = time or I.maxTime
  I.onComplete = onComplete or function()end
- I.rawset('obj', obj)
+ I.rawset('obj', obj or I.obj)
  if type(obj) ~= 'string' then--assume it's an asleep object in any case where it's not a string.
   I.rawset('objMode',true)
  end
- I.rawset('vars',vars)
+ I.rawset('vars',vars or I.vars)
  if vars.is then
   if vars.type == 'Color' then
    I.rawset('vars', {r=vars.r,g=vars.g,b=vars.b,a=vars.a})
@@ -54,7 +53,6 @@ Tween.reuse = function(tween, obj, vars, time, ease, onComplete)
   end
  end
  I.rawset('varStarts',starters)
- debugPrint()
  I.run()
 	return I
 end
@@ -74,9 +72,9 @@ Tween.new = function(obj, vars, time, ease, onComplete)
  local starters = {}
  for k, v in pairs(I.rawget('vars')) do
   if I.rawget('objMode') then
-   starters[k] = obj.rawget(k)
+   starters[k] = obj[k]
   else
-   starters[k] = getProperty(obj..'.'..k) or 'nil??'
+   starters[k] = getProperty(obj..'.'..k) or 0
   end
  end
  I.rawset('varStarts',starters)

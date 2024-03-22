@@ -1,7 +1,7 @@
 luaDebugMode = true
-package.path = package.path..debug.getinfo(1,'S').source:sub(2):match('(.+scripts/)')..'?.lua;'
-require'asleep.Event'
-require'asleep.Class'
+package.path = package.path..debug.getinfo(1,'S').source:sub(2):match('(.+asleep.)')..'?.lua;'
+require'Event'
+require'Class'
 Basic = Class.new('Basic')
 
 Basic.setField('_update', function()end)

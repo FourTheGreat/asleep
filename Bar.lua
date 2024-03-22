@@ -1,9 +1,9 @@
 luaDebugMode = true
-package.path = package.path..debug.getinfo(1,'S').source:sub(2):match('(.+scripts/)')..'?.lua;'
-require'asleep.Basic'
-require'asleep.Sprite'
-require'asleep.Color'
-require'asleep.tween.Tween'
+package.path = package.path..debug.getinfo(1,'S').source:sub(2):match('(.+asleep.)')..'?.lua;'
+require'Basic'
+require'Sprite'
+require'Color'
+require'tween.Tween'
 
 Bar = Basic.extend('Bar')
 Bar.setField('front', nil, 'default', 'never')

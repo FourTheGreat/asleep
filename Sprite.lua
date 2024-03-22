@@ -11,7 +11,6 @@ Sprite.set = function(I,k,v,c)
 	I.rawset(k,v)
 end
 Sprite.get = function(I,k,v)
-	debugPrint(k)
 	local g = getProperty(I.rawget('tag')..'.'..k)
 	if g == I.rawget('tag')..'.'..k then
 		return I.rawget(k)
@@ -20,6 +19,7 @@ Sprite.get = function(I,k,v)
 end
 Sprite.forceIndex = true
 Sprite.defaultGet = Sprite.get
+Sprite.nullGet = Sprite.get
 
 Sprite.setField('tag','')
 Sprite.setField('x',0, Sprite.get, Sprite.set)

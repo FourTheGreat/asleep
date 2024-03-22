@@ -16,6 +16,7 @@ Class.new = function(name)
 	self.instances = {}
 	self.instanceVars = {}
 	self.forceIndex = false
+	self.forceNewIndex = false
 	self.setField = function(field, defVal, get, set)
 		self.instanceVars[field] = {defVal, get or 'default', set or 'default'}
 	end
@@ -23,6 +24,12 @@ Class.new = function(name)
 		I.rawset(k,v)
 	end
 	self.defaultGet = function(I,k)
+		return I.rawget(k)
+	end
+	self.nullSet = function(I,k,v,c)
+		I.rawset(k,v)
+	end
+	self.nullGet = function(I,k)
 		return I.rawget(k)
 	end
 	self.setField('type', name)
@@ -83,7 +90,7 @@ Class.new = function(name)
 					end
 				else
 					if self.forceIndex then
-						return self.defaultGet(I,k,nil)
+						return self.nullGet(I,k)
 					end
 				end
 			end,
@@ -94,6 +101,10 @@ Class.new = function(name)
 						field[3](I,k,v,I.vars[k][1])
 					elseif field[2] == 'default' then
 						self.defaultSet(I,k,v,I.vars[k][1])
+					end
+				else
+					if self.forceNewIndex then
+						self.nullSet(I,k,v)
 					end
 				end
 			end

@@ -1,6 +1,6 @@
 luaDebugMode = true
-package.path = package.path..debug.getinfo(1,'S').source:sub(2):match('(.+scripts/)')..'?.lua;'
-require'asleep.Basic'
+package.path = package.path..debug.getinfo(1,'S').source:sub(2):match('(.+asleep.)')..'?.lua;'
+require'Basic'
 Timer = Basic.extend('Timer')
 
 Timer.setField('curTime',0)
@@ -25,6 +25,7 @@ end)
 Timer.onUpdate = function(I,e)
 	if I.rawget('running') then I.rawset('curTime', I.rawget('curTime')+(e*getProperty('playbackRate'))) end
 	if I.rawget('curTime') >= I.maxTime and I.rawget('running') then
+		I.rawset('curTime', I.rawget('curTime') - I.rawget('maxTime'))
 		if I.rawget('loops') == -1 then
 			I.run()
 		else
