@@ -1,7 +1,7 @@
 Event = {}
 ---@class Event, used to handle functions and shit. make sure to require this module before everything else, or it could bug.
 local holder = {}
-Event.set = function(name,f) 
+Event.set = function(name,f,tag) 
  if holder[name] == nil then
   holder[name] = {}
  end
@@ -10,7 +10,11 @@ Event.set = function(name,f)
   rawset(_G, name, nil)
  end
  if type(f) == 'function' then
-  table.insert(holder[name], f)
+  if tag then
+   holder[name][tag] = f
+  else
+   table.insert(holder[name], f)
+  end
  end
 end
 Event.call = function(name,...)
