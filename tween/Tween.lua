@@ -1,6 +1,5 @@
 luaDebugMode = true
 package.path = package.path..debug.getinfo(1,'S').source:sub(2):match('(.+scripts/)')..'?.lua;'
-require'asleep.Types'
 require'asleep.Timer'
 require'asleep.tween.EaseFuncs'
 Tween = Timer.extend('Tween')

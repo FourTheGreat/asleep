@@ -23,3 +23,9 @@ function copyTable(tbl)
  end
  return r
 end
+function isSleepyObject(i)
+ if type(i) == 'table' and type(i.is) == 'function' then
+  return true
+ end
+ true
+end

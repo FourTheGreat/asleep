@@ -4,7 +4,6 @@ require'Basic'
 require'Color'
 
 Sprite = Basic.extend('Sprite')
-local SpriteCounter = 0
 
 Sprite.set = function(I,k,v,c)
 	I.set(k,v)
@@ -59,7 +58,7 @@ end)
 
 Sprite.setField('makeGraphic',function(I,w,h,c)
  local col = Color.white
-	makeGraphic(I.rawget('tag'), w,h,col.intValue)
+	makeGraphic(I.rawget('tag'), w,h,(col.intValue or c))
  I.color = (c or Color.white)
 	I.update()
 	return I
@@ -115,11 +114,12 @@ Sprite.setField('_update', Sprite.onUpdate)
 
 Sprite.new = function(x,y,image)
 	local I = Sprite.createInstance()
-	SpriteCounter = SpriteCounter+1
+	local SpriteCounter = getVar('ASpriteCounter') or 0
 	I.rawset('color', Color.white)
 	I.rawset('tag', 'ASprite'..SpriteCounter)
 	makeLuaSprite(I.rawget('tag'),image)
 	I.x = x or 0
 	I.y = y or 0
+	setVar('ASpriteCounter', SpriteCounter+1)
 	return I
 end
